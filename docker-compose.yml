@@ -1,0 +1,23 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: postgres:latest
+    container_name: postgres_db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./address-book-api/src/config/database/database-seed.sql:/docker-entrypoint-initdb.d/database-seed.sql
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: toor
+      POSTGRES_USER: root
+      POSTGRES_DB: test
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
+
+volumes:
+    postgres-data:
