@@ -13,7 +13,11 @@ services:
     environment:
       POSTGRES_PASSWORD: toor
       POSTGRES_USER: root
-      POSTGRES_DB: test
+      # POSTGRES_DB: test
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
   adminer:
     image: adminer
     ports:

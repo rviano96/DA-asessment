@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize";
 import { Contact } from "../../models/contact.model";
-
-
+import dotenv from 'dotenv'
+dotenv.config()
 // const connection = new Sequelize({
 //   dialect: "postgres",
 //   host: "localhost",
@@ -11,11 +11,15 @@ import { Contact } from "../../models/contact.model";
 //   logging: false,
 //   models: [Contact],
 // });
-//const sequelize = new Sequelize('mysql://localhost:3306/database', {})
-const connection = new Sequelize('test', 'root', 'toor', {
-  host: 'localhost',
-  dialect: 'postgres',
-  logging: true
+const connection = new Sequelize(process.env.DATABASE_URL!, {
+  logging: true,
+  dialect: "postgres"
+
 })
+// const connection = new Sequelize('test', 'root', 'toor', {
+//   host: 'localhost',
+//   dialect: 'postgres',
+//   logging: true
+// })
 
 export default connection;

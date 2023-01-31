@@ -3,6 +3,7 @@ import contactRoutes from "../routes/contacts.route";
 import cors from 'cors'
 
 import db from '../config/database/connection'
+import { customErrorHandler } from "../utils/errorHandler";
 
 class Server {
 
@@ -18,11 +19,16 @@ class Server {
         this.dbConnection()
         this.middlewares()
         this.routes()
+        //Error handler
+        this.app.use(customErrorHandler)
+
     }
 
     async dbConnection() {
         try {
             await db.authenticate()
+            //TODO: DO NOT USE THIS IN PROD!!!
+            // await db.sync({ alter: true })
             console.log("Database connected")
         } catch (error: any) {
             throw new Error(error)
@@ -45,6 +51,7 @@ class Server {
             console.log(`Server running on port: ${this.port}`)
         })
     }
+    
 }
 
 export default Server
