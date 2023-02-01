@@ -23,7 +23,7 @@ export class Contact implements IContact {
         this.deletedAt = deletedAt
         this.createdAt = createdAt
         this.updatedAt = updatedAt
-        this.about = about
+        this.about = about ?? undefined
         this.photoUrl = photoUrl?.trim().toLowerCase()
     }
 

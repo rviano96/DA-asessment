@@ -26,7 +26,6 @@ Contact.init({
   email: {
     type: DataTypes.STRING(255),
     allowNull: false,
-    unique: true
   },
   phone: {
     type: DataTypes.STRING(255),
@@ -44,4 +43,11 @@ Contact.init({
     type: DataTypes.DATE,
     allowNull: true,
   }
-}, { sequelize: db, })
+}, {
+  sequelize: db, indexes: [
+    {
+      unique: true,
+      fields: ['email', 'deletedAt']
+    }
+  ]
+})

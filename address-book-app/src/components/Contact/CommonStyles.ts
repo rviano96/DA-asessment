@@ -30,3 +30,12 @@ export const ImageContainer = styled.div`
     justify-content: center;
     display:flex;
 `
+
+export const SpinnerContainer = styled.div`
+    display: flex;
+    align-items:center;
+    justify-content:center;
+    height: 100%;                   
+    text-align: center;             
+    font-family: "Roboto","Helvetica","Arial",sans-serif;                          
+`

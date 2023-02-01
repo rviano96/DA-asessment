@@ -7,7 +7,7 @@ import CustomError from "../utils/customError";
 export const create = async (newContact: IContact): Promise<{ contact: IContact }> => {
     try {
         const [contactRecord, created] = await Contact.findOrCreate({
-            where: { email: newContact.email },
+            where: { email: newContact.email, deletedAt: null },
             defaults: { ...newContact }
         });
         if (!created) {
@@ -21,14 +21,14 @@ export const create = async (newContact: IContact): Promise<{ contact: IContact 
 
 export const update = async (contactToUpdate: IContact, id: number): Promise<{ contact: IContact }> => {
     try {
-        const existingContact = await Contact.findByPk(id)
+        const existingContact = await Contact.findOne({ where: { deletedAt: null, id } })
 
         if (!existingContact) {
             throw new CustomError('Cannot update contact\n. There is no contact with that ID', CONTACT_NOT_FOUND_EXCEPTION)
         }
 
         if (!!contactToUpdate.email && (contactToUpdate.email !== existingContact.email)) {
-            const contact = await Contact.findOne({ where: { email: contactToUpdate.email, id: { [Op.ne]: id } } })
+            const contact = await Contact.findOne({ where: { email: contactToUpdate.email, id: { [Op.ne]: id },  deletedAt: null }})
             if (contact) {
                 throw new CustomError('Cannot update contact\n. There is already a contact with that email', ALREADY_EXIST_EXCEPTION)
             }
@@ -42,7 +42,7 @@ export const update = async (contactToUpdate: IContact, id: number): Promise<{ c
 
 export const remove = async (id: number): Promise<any> => {
     try {
-        const existingContact = await Contact.findByPk(id)
+        const existingContact = await Contact.findOne({ where: { deletedAt: null, id } })
 
         if (!existingContact) {
             throw new CustomError('Cannot remove contact\n. There is no contact with that ID', CONTACT_NOT_FOUND_EXCEPTION)
@@ -69,7 +69,11 @@ export const findAll = async (offset: number = 0, limit: number = 25, searchText
                 ]
             },
             offset,
-            limit
+            limit,
+            order: [
+                ['name', 'ASC'],
+                ['surname', 'ASC'],
+            ],
         })
         if (offset === 0) {
             const count = await Contact.count(
@@ -96,7 +100,7 @@ export const findAll = async (offset: number = 0, limit: number = 25, searchText
 
 export const findOneById = async (id: number): Promise<{ contact: IContact }> => {
     try {
-        const contact: IContact | null = await Contact.findByPk(id)
+        const contact: IContact | null = await Contact.findOne({ where: { deletedAt: null, id } })
 
         if (!contact) {
             throw new CustomError(' There is no contact with that ID', CONTACT_NOT_FOUND_EXCEPTION)

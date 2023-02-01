@@ -13,15 +13,13 @@ services:
     environment:
       POSTGRES_PASSWORD: toor
       POSTGRES_USER: root
-      # POSTGRES_DB: test
-    logging:
-      options:
-        max-size: 10m
-        max-file: "3"
-  adminer:
-    image: adminer
-    ports:
-      - 8080:8080
+      POSTGRES_DB: address-book
+    
+  # Uncomment this if you want to acces the database using adminer
+  # adminer:
+  #   image: adminer
+  #   ports:
+  #     - 8080:8080
 
 volumes:
     postgres-data:

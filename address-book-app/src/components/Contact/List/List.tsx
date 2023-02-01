@@ -1,8 +1,8 @@
 import React, { useEffect } from "react"
-import { TableCell, TableRow } from '@mui/material'
+import { TableCell } from '@mui/material'
 import SearchBar from "material-ui-search-bar"
 import SearchableTable from '../Table/Table'
-import { HeadCell, NameCell, Row, TopBarContainer, } from './Styles'
+import { NameCell, Row, TopBarContainer, } from './Styles'
 import { Contact } from '../../../models/contact.model'
 import { getAllContacts } from '../../../services/contact.service'
 import { CONTACT_CREATE_PATH, CONTACT_EDIT_PATH } from "../../../Constants"
@@ -18,6 +18,7 @@ const List: React.FC = () => {
     const [count, setCount] = React.useState<number>(0)
     const [contacts, setContacts] = React.useState<Contact[]>([])
     const debouncedSearch: string = useDebounce<string>(searchText, 500)
+
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -28,7 +29,7 @@ const List: React.FC = () => {
     const getContacts = (offset: number, searchText?: string) => {
         setIsSearching(true)
         setIsError(false)
-        getAllContacts({ offset, limit: (offset + 1) * PAGE_SIZE, search: searchText })
+        getAllContacts({ offset: (offset * PAGE_SIZE), limit: PAGE_SIZE, search: searchText })
             .then((response: any) => {
                 setContacts(response.data.contacts)
                 response.data.count && setCount(response.data.count)
@@ -42,9 +43,8 @@ const List: React.FC = () => {
 
     useEffect(
         () => {
-            if (debouncedSearch) {
-                getContacts(0, debouncedSearch)
-            }
+            setContacts([])
+            getContacts(0, debouncedSearch)
         },
         [debouncedSearch]
     )
@@ -66,39 +66,25 @@ const List: React.FC = () => {
                 return (
                     <Row key={contact.id}
                         onClick={() => navigateToEditUser(contact.id)}
-                        style={{ cursor: 'pointer' }}
                     >
-                        <TableCell align="left" component="th" scope="row" style={{ width: 30, height: 30 }}>
+                        <TableCell key={`${contact.id}-photo`} align="left" component="th" scope="row" style={{ width: 30, height: 30 }}>
                             {contact.photoUrl ? <Image src={contact.photoUrl} width={'30'} height={'30'} /> : <Image src='' width={'30'} height={'30'} />}
                         </TableCell>
-                        <NameCell align="left" component="th" scope="row" >
+                        <NameCell key={`${contact.id}-name`} align="left" component="th" scope="row" >
                             {contact.fullName}
                         </NameCell>
-                        <TableCell align="left" component="th" scope="row">{contact.email}</TableCell>
-                        <TableCell align="left" component="th" scope="row">{contact.phone}</TableCell>
+                        <TableCell key={`${contact.id}-email`} align="left" component="th" scope="row">{contact.email}</TableCell>
+                        <TableCell key={`${contact.id}-phone`} align="left" component="th" scope="row">{contact.phone}</TableCell>
 
                     </Row>)
             })
         )
     }
 
-    const getColumns = (columns: any) => {
-        return (
-            <TableRow key={'header'} >
-                {columns.map((column: any) => {
-                    return (<>
-                        <HeadCell align="left" key={column.header}> {column.header}</HeadCell >
-                    </>)
-                })}
-
-            </TableRow>
-        )
-    }
-
     const searchBar = () => {
         return (
             <SearchBar
-                style={{ 'margin-right': '1rem' }}
+                style={{ 'marginRight': '1rem' }}
                 value={searchText}
                 onChange={(searchVal) => setSearchText(searchVal)}
                 onCancelSearch={() => cancelSearch()}
@@ -119,13 +105,16 @@ const List: React.FC = () => {
 
     return <SearchableTable
         rows={getRows(contacts)}
-        columns={getColumns(columns)}
+        columns={columns}
         pageSize={PAGE_SIZE}
-        onPageChanged={(page) => getContacts(page)}
+        onPageChanged={(page) => {
+            getContacts(page, debouncedSearch)
+        }}
         topBar={topBar()}
         count={count}
         isSearching={isSearching}
         isError={isError}
+        searchText={debouncedSearch}
     />
 
 }

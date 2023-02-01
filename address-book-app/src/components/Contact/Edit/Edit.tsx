@@ -14,6 +14,7 @@ const EditContact: React.FC = () => {
     const navigate = useNavigate()
     const [contact, setContact] = React.useState<IContact>()
     const [openDialog, setOpenDialog] = React.useState(false)
+    const [isLoading, setIsLoading] = React.useState(false)
 
     useEffect(() => {
         if (id) {
@@ -23,28 +24,43 @@ const EditContact: React.FC = () => {
 
     const retrieveContact = async (id: number) => {
         try {
+            setIsLoading(true)
             const response = await getContact(id)
             setContact(response.data.contact)
         } catch (error: any) {
             console.log(error)
+            navigate(CONTACT_BASE_PATH)
             throw error
+        } finally {
+            setIsLoading(false)
         }
     }
 
     const update = async (values: IContact) => {
-        const contact = new Contact(values)
-        try {
-            await updateContact(contact)
-            navigate(CONTACT_BASE_PATH)
-        } catch (error: any) {
-            console.log(error)
-            throw error
+        if (id) {
+            try {
+                setIsLoading(true)
+                const contact = new Contact(values)
+                delete contact.deletedAt
+                delete contact.id
+                delete contact.createdAt
+                delete contact.updatedAt
+                await updateContact(contact, parseInt(id))
+                navigate(CONTACT_BASE_PATH)
+            } catch (error: any) {
+                console.log(error)
+                throw error
+            } finally {
+                setIsLoading(false)
+            }
         }
+
     }
 
     const deleteContact = async () => {
         if (id) {
             try {
+                setIsLoading(true)
                 await removeContact(parseInt(id))
                 navigate(CONTACT_BASE_PATH)
             } catch (error: any) {
@@ -52,6 +68,7 @@ const EditContact: React.FC = () => {
                 throw error
             } finally {
                 closeDialog()
+                setIsLoading(true)
             }
         }
 
@@ -68,6 +85,7 @@ const EditContact: React.FC = () => {
                 edit={true}
                 onSubmit={(values: IContact) => update(values)}
                 onDelete={() => setOpenDialog(true)}
+                isLoading={isLoading}
             />
             <Dialog
                 open={openDialog}

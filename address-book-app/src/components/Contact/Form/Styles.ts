@@ -13,9 +13,8 @@ export const FormContainer = styled.div`
     height:100%;
 `
 export const Content = styled.div`
-    margin-top:auto;
-    margin-bottom:auto;
-    /* background-color: #74bad0; */
+    margin-top: auto;
+    margin-bottom: auto;
     background-color: #dddddd;
     padding:1rem;
     border-radius:1rem;

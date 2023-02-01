@@ -27,8 +27,6 @@ class Server {
     async dbConnection() {
         try {
             await db.authenticate()
-            //TODO: DO NOT USE THIS IN PROD!!!
-            // await db.sync({ alter: true })
             console.log("Database connected")
         } catch (error: any) {
             throw new Error(error)

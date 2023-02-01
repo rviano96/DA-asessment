@@ -6,10 +6,6 @@ export const Container = styled.div`
     display:flex;
 `
 
-export const HeadCell = styled(TableCell)`
-    font-weight: bold !important;
-`
-
 export const TopBarContainer = styled(Paper)`
     padding: 1rem;
     display: flex;

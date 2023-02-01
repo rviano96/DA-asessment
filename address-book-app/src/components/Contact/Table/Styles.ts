@@ -1,4 +1,4 @@
-import { Paper as PaperUI } from '@mui/material'
+import { Paper as PaperUI, TableCell } from '@mui/material'
 import styled from 'styled-components'
 
 export const Container = styled.div`
@@ -12,9 +12,6 @@ export const Paper = styled(PaperUI)`
     width:100%;
 `
 
-export const SpinnerContainer = styled.div`
-    display: flex;
-    align-items:center;
-    justify-content:center;
-    height: 100%                                                          
+export const HeadCell = styled(TableCell)`
+    font-weight: bold !important;
 `
