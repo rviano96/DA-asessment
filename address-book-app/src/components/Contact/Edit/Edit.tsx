@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useCallback, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { CONTACT_BASE_PATH } from "../../../Constants"
 import { IContact } from "../../../interfaces/contact.interface"
@@ -16,25 +16,28 @@ const EditContact: React.FC = () => {
     const [openDialog, setOpenDialog] = React.useState(false)
     const [isLoading, setIsLoading] = React.useState(false)
 
+
+    const retrieveContactCB = useCallback(
+        async (id: number) => {
+            try {
+                setIsLoading(true)
+                const response = await getContact(id)
+                setContact(response.data.contact)
+            } catch (error: any) {
+                console.log(error)
+                navigate(CONTACT_BASE_PATH)
+                throw error
+            } finally {
+                setIsLoading(false)
+            }
+        }, [navigate],
+    )
+
     useEffect(() => {
         if (id) {
-            retrieveContact(parseInt(id))
+            retrieveContactCB(parseInt(id))
         }
-    }, [id])
-
-    const retrieveContact = async (id: number) => {
-        try {
-            setIsLoading(true)
-            const response = await getContact(id)
-            setContact(response.data.contact)
-        } catch (error: any) {
-            console.log(error)
-            navigate(CONTACT_BASE_PATH)
-            throw error
-        } finally {
-            setIsLoading(false)
-        }
-    }
+    }, [id, retrieveContactCB])
 
     const update = async (values: IContact) => {
         if (id) {

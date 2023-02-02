@@ -1,4 +1,4 @@
-import { Dialog, DialogContentText, DialogTitle } from '@mui/material'
+import { DialogContentText, DialogTitle } from '@mui/material'
 import styled from 'styled-components'
 
 export const CustomDialogTitle = styled(DialogTitle)`

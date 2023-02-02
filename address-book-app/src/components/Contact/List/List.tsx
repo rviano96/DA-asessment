@@ -21,11 +21,6 @@ const List: React.FC = () => {
 
     const navigate = useNavigate()
 
-    useEffect(() => {
-        getContacts(0)
-    }, [])
-
-
     const getContacts = (offset: number, searchText?: string) => {
         setIsSearching(true)
         setIsError(false)

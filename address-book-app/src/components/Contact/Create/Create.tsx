@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React from "react"
 import { useNavigate } from "react-router-dom"
 import { CONTACT_BASE_PATH } from "../../../Constants"
 import { IContact } from "../../../interfaces/contact.interface"
