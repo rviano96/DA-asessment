@@ -1,7 +1,7 @@
 Technical assessment for full stack dev position
 
 Run `docker-compose up --build` to set up the database 
-- Make sure that a database called `address-book`
+- Make sure that a database called `address-book` is created
 - Inside the database there should be a table called `Contacts` with those columns 
     - id
     - name 
