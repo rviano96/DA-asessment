@@ -15,4 +15,5 @@ Run `docker-compose up --build` to set up the database
     - createdAt 
 
 Check [this README](address-book-app/README.md) to see how to run the app
+
 Check [this README](address-book-api/README.md) to see how to run the api
